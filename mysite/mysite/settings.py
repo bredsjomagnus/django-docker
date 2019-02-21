@@ -11,6 +11,18 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+from decouple import config
+
+DJANGO_SECRET_KEY = config('DJANGO_SECRET_KEY')
+DB_HOST = config('DJANGO_DB_HOST', default='localhost')
+POSTGRES_USER = config('POSTGRES_USER')
+POSTGRES_PASSWORD = config('POSTGRES_PASSWORD')
+PGADMIN_DEFAULT_EMAIL = config('PGADMIN_DEFAULT_EMAIL')
+PGADMIN_DEFAULT_PASSWORD = config('PGADMIN_DEFAULT_PASSWORD')
+DJANGO_DB_NAME = config('DJANGO_DB_NAME')
+DJANGO_SU_NAME = config('DJANGO_SU_NAME')
+DJANGO_SU_PASSWORD = config('DJANGO_SU_PASSWORD')
+DJANGO_SU_EMAIL = config('DJANGO_SU_EMAIL')
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,7 +32,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'mngksjq1wk8)q#j9vnh%6s*yl+7f0dmmu7&uwe^^q_%gzjrqi!'
+# SECRET_KEY = 'mngksjq1wk8)q#j9vnh%6s*yl+7f0dmmu7&uwe^^q_%gzjrqi!'
+SECRET_KEY = DJANGO_SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -31,6 +44,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'myapp.apps.MyappConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -73,8 +87,24 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
+
+POSTGRES_PASSWORD = os.environ.get('POSTGRES_PASSWORD')
 DATABASES = {
     'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',                      
+        'USER': POSTGRES_USER,
+        'PASSWORD': POSTGRES_PASSWORD,
+        'HOST': DB_HOST,
+        'PORT': '5432',
+    },
+    'local': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
